@@ -47,7 +47,14 @@ export default function HomeScreen() {
 
   const handlePressOutside = () => {
     Keyboard.dismiss(); // Hide the keyboard
-    setIsAdding(false); // Hide the input view
+    if (!isAdding) {
+      setIsAdding(true);
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    } else {
+      setIsAdding(false); //hide input view
+    }
   };
 
   const handleInputBlur = () => {
