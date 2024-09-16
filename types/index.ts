@@ -55,3 +55,8 @@ export interface SortDropdownProps {
   sortOption: 'time' | 'completion';
   setSortOption: React.Dispatch<React.SetStateAction<'time' | 'completion'>>;
 }
+
+export interface CheckUncheckAllButtonProps {
+  onPress: () => void;
+  allCompleted: boolean;
+}

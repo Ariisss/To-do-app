@@ -23,15 +23,18 @@ import {
   sortTodos,
   clearCompletedTasks,
   getTodosFromStorage,
+  toggleAllTodos,
 } from "@/utils/todo";
 import { Todo } from "@/types/index";
 import SortDropdown from "@/components/SortDropdown";
+import CheckUncheckAllButton from "@/components/CheckUncheckAllButton";
 
 export default function HomeScreen() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [inputText, setInputText] = useState<string>("");
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [sortOption, setSortOption] = useState<"time" | "completion">("time");
+  const [allCompleted, setAllCompleted] = useState<boolean>(false);
   const inputRef = useRef<TextInput>(null);
   const colorScheme = useColorScheme() ?? 'light';
 
@@ -45,9 +48,21 @@ export default function HomeScreen() {
 
   const sortedTodos = sortTodos(todos, sortOption);
 
+  const handleCheckUncheckAll = () => {
+    toggleAllTodos(todos, setTodos, !allCompleted);
+    setAllCompleted(!allCompleted);
+  };
+
   const handlePressOutside = () => {
     Keyboard.dismiss(); // Hide the keyboard
-    setIsAdding(false); // Hide the input view
+    if (!isAdding) {
+      setIsAdding(true);
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    } else {
+      setIsAdding(false); //hide input view
+    }
   };
 
   const handleInputBlur = () => {
@@ -108,8 +123,9 @@ export default function HomeScreen() {
             />
 
           </ParallaxScrollView>
-          <AddTodoButton
-            onPress={() => handleAddButtonPress(setIsAdding, inputRef)}
+          <CheckUncheckAllButton
+            onPress={handleCheckUncheckAll}
+            allCompleted={allCompleted}
           />
           <ClearCompletedButton
             onPress={() => clearCompletedTasks(todos, setTodos)}
