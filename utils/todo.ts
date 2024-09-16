@@ -205,3 +205,17 @@ export const handleDelete = async (
     console.error('Failed to delete todo:', error);
   }
 };
+
+export const toggleAllTodos = async ( 
+  todos: Todo[],
+  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>,
+  setAllCompleted: boolean
+) => {
+  try {
+    const updatedTodos = todos.map(todo => ({ ...todo, completed: setAllCompleted }));
+    setTodos(updatedTodos);
+    await saveTodosToStorage(updatedTodos);
+  } catch (error) {
+    console.error('Failed to toggle all todos:', error);
+  }
+};
